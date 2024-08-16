@@ -1,0 +1,82 @@
+<div>
+  <button
+    mat-raised-button
+    class="example-button-row"
+    (click)="openAddUserModal()"
+  >
+    Add new user
+  </button>
+  <dx-data-grid
+    [dataSource]="dataSource"
+    [columns]="columns"
+    [editing]="{ allowUpdating: true, allowAdding: true }"
+    [filterRow]="{ visible: true }"
+    [pager]="{
+      showPageSizeSelector: true,
+      allowedPageSizes: [5, 10, 30],
+      showInfo: true
+    }"
+    [paging]="{ pageSize: 10 }"
+  >
+    <dxi-column dataField="id" caption="ID" [allowEditing]="false"></dxi-column>
+    <dxi-column
+      dataField="employeeStatusName"
+      caption="Employee Status Name"
+    ></dxi-column>
+    <dxi-column
+      dataField="employeeStatusType"
+      caption="Employee Status Type"
+    ></dxi-column>
+    <dxi-column
+      dataField="duration"
+      caption="Duration"
+      dataType="number"
+    ></dxi-column>
+    <dxi-column
+      dataField="isPKWTCompensation"
+      caption="PKWT Compensation"
+      dataType="boolean"
+    ></dxi-column>
+    <dxi-column
+      dataField="isProbation"
+      caption="Is Probation"
+      dataType="boolean"
+    ></dxi-column>
+    <dxi-column
+      dataField="isUsed"
+      caption="Is Used"
+      dataType="boolean"
+    ></dxi-column>
+    <dxi-column
+      dataField="createdAt"
+      caption="Created At"
+      dataType="date"
+    ></dxi-column>
+    <dxi-column dataField="createdBy" caption="Created By"></dxi-column>
+    <dxi-column
+      dataField="updatedAt"
+      caption="Updated At"
+      dataType="date"
+    ></dxi-column>
+    <dxi-column dataField="updatedBy" caption="Updated By"></dxi-column>
+    <dxi-column type="buttons" width="120">
+      <dxi-button
+        name="CustomEdit"
+        text="Edit"
+        [onClick]="openEditUserModal"
+      ></dxi-button>
+      <dxi-button
+        name="CustomDelete"
+        text="Delete"
+        [onClick]="onDeleteButtonClick"
+      ></dxi-button>
+    </dxi-column>
+
+    <dxo-editing
+      mode="row"
+      [allowUpdating]="true"
+      [allowDeleting]="true"
+      [useIcons]="true"
+    ></dxo-editing>
+  </dx-data-grid>
+</div>

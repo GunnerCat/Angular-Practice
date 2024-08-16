@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Employee Status</h2>
+<mat-dialog-content>
+  <p>Status Name:</p>
+  <mat-form-field>
+    <mat-label>Employee Status Name</mat-label>
+    <input matInput [(ngModel)]="employeeStatusName" />
+  </mat-form-field>
+
+  <p>Status Type:</p>
+  <mat-radio-group [(ngModel)]="employeeStatusType">
+    <mat-radio-button checked value="PKWT">PKWT</mat-radio-button>
+    <mat-radio-button value="PKWTT">PKWTT</mat-radio-button>
+  </mat-radio-group>
+
+  <p>Duration:</p>
+  <mat-form-field>
+    <mat-label>Duration</mat-label>
+    <input matInput type="number" [(ngModel)]="duration" />
+  </mat-form-field>
+
+  <p>PKWT Compensation:</p>
+  <mat-checkbox [(ngModel)]="isPKWTCompensation">Yes</mat-checkbox>
+
+  <p>Probation:</p>
+  <mat-checkbox [(ngModel)]="isProbation">Yes</mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="onCreateUser()" cdkFocusInitial>Save</button>
+</mat-dialog-actions>
