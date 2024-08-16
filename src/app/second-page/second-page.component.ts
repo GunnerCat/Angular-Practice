@@ -179,7 +179,7 @@ export class DataGridComponent implements OnInit {
     this.apollo
       .mutate({
         mutation: REMOVE_USER,
-        variables: { id: userId }, // Ensure userId is correctly formatted as a UUID
+        variables: { id: userId },
       })
       .subscribe({
         next: (result) => {
@@ -325,7 +325,6 @@ export class EditUserModal {
       });
   }
 
-  // Method to close the dialog without saving
   onNoClick(): void {
     this.dialogRef.close();
   }
