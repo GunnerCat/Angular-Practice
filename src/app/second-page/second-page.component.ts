@@ -33,6 +33,14 @@ export interface EmployeeStatusInput {
   isPKWTCompensation: boolean;
   isProbation: boolean;
 }
+export interface EmployeeStatusInputEdit {
+  id: string;
+  employeeStatusName: string;
+  employeeStatusType: 'PKWT' | 'PKWTT';
+  duration: number;
+  isPKWTCompensation: boolean;
+  isProbation: boolean;
+}
 
 const GET_USERS = gql`
   query {
@@ -65,10 +73,8 @@ const CREATE_USER = gql`
 `;
 
 const EDIT_USER = gql`
-  mutation UpdateUser($id: Int!, $name: String!, $age: Int!) {
-    update_User(where: { ID: { _eq: $id } }, _set: { Name: $name, Age: $age }) {
-      affected_rows
-    }
+  mutation ($employeeStatus: EmployeeStatusInput!) {
+    updateEmployeeStatus(employeeStatus: $employeeStatus)
   }
 `;
 
@@ -146,12 +152,12 @@ export class DataGridComponent implements OnInit {
     e.event?.preventDefault();
     e.event?.stopPropagation();
 
-    const id = e.row?.data.ID;
+    const userId = e.row?.data.id;
 
-    console.log(id);
+    console.log('User ID:', userId);
 
     const dialogRef = this.dialog.open(EditUserModal, {
-      data: { id: id },
+      data: { id: userId },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -166,9 +172,9 @@ export class DataGridComponent implements OnInit {
     e.event?.preventDefault();
     e.event?.stopPropagation();
 
-    const userId = e.row?.data.id; // Ensure this is a UUID formatted string
+    const userId = e.row?.data.id;
 
-    console.log('User ID:', userId); // Log the UUID to verify format
+    console.log('User ID:', userId);
 
     this.apollo
       .mutate({
@@ -262,7 +268,6 @@ export class AddUserModal {
   imports: [
     MatInputModule,
     FormsModule,
-    DxButtonModule,
     MatButtonModule,
     MatDialogTitle,
     MatDialogContent,
@@ -270,28 +275,38 @@ export class AddUserModal {
     MatDialogClose,
     MatFormFieldModule,
     MatButtonModule,
+    MatCheckboxModule,
+    MatRadioModule,
   ],
 })
 export class EditUserModal {
   readonly dialogRef = inject(MatDialogRef<EditUserModal>);
   readonly data = inject(MAT_DIALOG_DATA);
 
-  id: number;
-  name: string;
-  age: number;
+  id = signal('');
+  employeeStatusName = signal('');
+  employeeStatusType = signal<'PKWT' | 'PKWTT'>('PKWT');
+  duration = signal(0);
+  isPKWTCompensation = signal(false);
+  isProbation = signal(false);
 
   constructor(private apollo: Apollo) {
-    this.id = this.data.id;
-    this.name = this.data.name;
-    this.age = this.data.age;
     this.onEditUser = this.onEditUser.bind(this);
   }
-
   onEditUser(): void {
+    const newStatus: EmployeeStatusInputEdit = {
+      id: this.data.id,
+      employeeStatusName: this.employeeStatusName(),
+      employeeStatusType: this.employeeStatusType(),
+      duration: this.duration(),
+      isPKWTCompensation: this.isPKWTCompensation(),
+      isProbation: this.isProbation(),
+    };
+    console.log(newStatus);
     this.apollo
       .mutate({
         mutation: EDIT_USER,
-        variables: { id: this.id, name: this.name, age: this.age },
+        variables: { employeeStatus: newStatus },
       })
       .subscribe({
         next: (result) => {
